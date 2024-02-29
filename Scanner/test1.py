@@ -9,38 +9,39 @@ class Token:
 
 # Define token types
 TOKEN_TYPES = {
-    "LET": r"let",
-    "IN": r"in",
-    "WHERE": r"where",
-    "REC": r"rec",
-    "ID": r"[a-zA-Z_][a-zA-Z0-9_]*",
+    "IDENTIFIER": r"[a-zA-Z_][a-zA-Z0-9_]*",
     "INT": r"\d+",
-    "ARROW": r"->",
-    "EQ": r"eq",
-    "PLUS": r"\+",
-    "MINUS": r"-",
-    "COMMA": r",",
-    "LPAREN": r"\(",
-    "RPAREN": r"\)",
-    "PRINT": r"Print",
+    "OPERATOR": r"[+|-|/|*]+",
+    "STRING": r"'(?:\\[tn\\'\(\);,]|''|[\w\s\d+\-*<>&.@/:=˜|$!#%^_[\]{}\"‘?;])*'",
+    # "Punction": r"[(|)|;|']*",
+    # "LETTER": r"[a-zA-Z][a-zA-Z]*",
+    # "DIGIT": r"[0-9]",
+    "comment": r'//(?:\'\'\'\'|\(|\)|;|,|\\| |\t|ht|\w|[\d\s+\-*<>&.@/:=˜|$!#%^_[\]{}"‘?;])*',
+    "punctuation": r"[\(\);,]",
+    "letter": r'[A-Za-z]*',
+    "digit": r'[0-9]*',
+    "operator": r'[+\-*<>&.@/:=˜|$!#%^_[\]{}"‘?;]',
+    # "LETTERS": r"[a-zA-Z]*",
 }
 
 
 def tokenize(input_string):
     tokens = []
+
     for token_type, pattern in TOKEN_TYPES.items():
         regex = re.compile(pattern)
         match = regex.match(input_string)
+
         while match:
             lexeme = match.group()
             tokens.append(Token(token_type, lexeme))
             input_string = input_string[len(lexeme) :].lstrip()
             match = regex.match(input_string)
+
     return tokens
 
 
-# Example
-input_program = """let Sum(A) = Psum (A,Order A ) in Print ( Sum (1,2,3,4,5) )"""
+input_program = """let sum + 's' dcsaas ( # ghsdhv """
 tokens = tokenize(input_program)
 for token in tokens:
-    print(f"Type: {token.token_type}, Lexeme: {token.lexeme}")
+    print(f"{token.token_type} {token.lexeme}")
