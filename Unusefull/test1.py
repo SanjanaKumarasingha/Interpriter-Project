@@ -41,7 +41,7 @@ def tokenize(input_string):
     return tokens
 
 
-input_program = """let sum + 's' dcsaas ( # ghsdhv """
+input_program = "let Sum(A)  Psum (A,Order A )"
 tokens = tokenize(input_program)
 for token in tokens:
     print(f"{token.token_type} {token.lexeme}")
