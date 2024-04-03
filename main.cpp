@@ -6,11 +6,8 @@
 #include <string>
 #include <string.h>
 #include <stack>
-// #include "LexicalAnalyzer.h"
 #include "Lexical_Analyzer/LexicalAnalyzer.cpp"
-// #include "Tree.h"
 #include "Tree/Tree.cpp"
-// #include "Parser.h"
 #include "Parser/Parser.cpp"
 
 using namespace std;
@@ -24,8 +21,7 @@ int main(int argc, char *argv[])
 
 	Parser Par(&Lex);
 	Par.E();
-	cout << "\n\n ABSTRACT SYNTAXT TREE\n\n"
-		 << endl;
+	cout << "\n\n Abstract Syntaxt Tree \n\n";
 	Tree::TreePrint(Par.getTopTree());
 
 	return 0;
