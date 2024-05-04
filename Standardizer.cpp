@@ -3,7 +3,7 @@
 #include <string>
 #include <cstdio>
 #include <ctype.h>
-#include "Tree.h"
+#include "Tree/Tree.h"
 #include "Standardizer.h"
 
 Tree* Standardizer:: standardizeTree(Tree *tree) {

@@ -2,19 +2,13 @@
 #include <tchar.h>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <string.h>
-#include <stack>
 #include "Lexical_Analyzer/LexicalAnalyzer.cpp"
 #include "Tree/Tree.cpp"
 #include "Parser/Parser.cpp"
-#include "Standardizer.h"
 #include "Standardizer.cpp"
-#include "CSElement.h"
-#include "CSElement.cpp"
-#include "CSEMachine.h"
-#include "CSEMachine.cpp"
+#include "CSEMachine/CSEMachine.cpp"
 
 using namespace std;
 
@@ -27,14 +21,16 @@ int main(int argc, char *argv[])
 
 	Parser Par(&Lex);
 	Par.E();
-	// cout << "\n\n Abstract Syntaxt Tree \n\n";
+	cout << "\n\n Abstract Syntaxt Tree \n\n";
 	Tree::TreePrint(Par.getTopTree());
-	cout << "\n\n STDANDARDIZED TREE\n\n" << endl;
-	Tree::prettyPrint(Standardizer::standardizeTree(Par.getTopTree()));
-	cout << "\n\n CSE Machine structure \n\n" << endl;
+
+	cout << "\n\n Stdandardized Tree\n\n";
+	Tree::TreePrint(Standardizer::standardizeTree(Par.getTopTree()));
+
+	cout << "\n\n CSE Machine structure \n\n";
 	CSEMachine csemachine(Par.getTopTree());
-	cout << "\n\n" << endl;
-	cout << "Terminated succesfully! Press any key to continue..." << endl;
+
+	cout << "Terminated Succesfully!" << endl;
 
 	return 0;
 }

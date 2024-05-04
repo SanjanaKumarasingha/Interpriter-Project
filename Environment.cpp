@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "CSElement.h"
+#include "CSEMachine/CSElement.h"
 #include "Environment.h"
 
 using namespace std;

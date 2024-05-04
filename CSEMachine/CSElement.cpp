@@ -4,7 +4,6 @@
 #include <vector>
 #include "CSElement.h"
 
-
 CSElement:: CSElement(string mVal) {
     value = mVal;
     index = 0;

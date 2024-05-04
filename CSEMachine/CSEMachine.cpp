@@ -3,20 +3,16 @@
 #include <string>
 #include <ctype.h>
 #include <cstdio>
-#include <stack>
-#include <vector>
-#include <cmath> 
-#include "Tree.h"
-#include "Tree.cpp"
-#include "CSElement.h"
+// #include <stack>
+// #include <vector>
+// #include <cmath>
+#include "../Tree/Tree.cpp"
 #include "CSElement.cpp"
-#include "Environment.h"
-#include "Environment.cpp"
+#include "../Environment.cpp"
 #include "CSEMachine.h"
 
-
-
-string CSEMachine:: getTypeString(int type) {
+string CSEMachine::getTypeString(int type)
+{
     if (type == 0)
         return "STRING";
     else if (type == 1)
@@ -29,36 +25,42 @@ string CSEMachine:: getTypeString(int type) {
         return "UNKNOWN!";
 }
 
-CSEMachine:: CSEMachine(Tree* tree) {
+CSEMachine::CSEMachine(Tree *tree)
+{
     stdTree = tree;
 
     printControlCreation = false;
     buildControlStructures(tree, 1);
 
     printControls = true;
-    if(printControls)
+    if (printControls)
         printControlStructures();
     initializeCSEMachine();
     runCSEMachine();
 }
 
-void CSEMachine:: buildControlStructures(Tree* tree, int index) {
+void CSEMachine::buildControlStructures(Tree *tree, int index)
+{
     if (tree == NULL)
         return;
-    if(printControlCreation)
+    if (printControlCreation)
         cout << index << ".\t" << tree->nodeValue << " is a " << getTypeString(tree->nodeType) << endl;
-    if (controls.size() < index) {
+    if (controls.size() < index)
+    {
         controls.push_back(*(new vector<CSElement>));
     }
 
-    CSElement* currentEl;
-    if (tree->nodeValue == "lambda") {
+    CSElement *currentEl;
+    if (tree->nodeValue == "lambda")
+    {
         string varName = tree->childNode->nodeValue;
-        if (varName == ",") {
+        if (varName == ",")
+        {
             Tree *temp = tree->childNode->childNode;
             varName = temp->nodeValue;
             temp = temp->siblingNode;
-            while (temp != NULL) {
+            while (temp != NULL)
+            {
                 varName = varName + "," + temp->nodeValue;
                 temp = temp->siblingNode;
             }
@@ -68,43 +70,48 @@ void CSEMachine:: buildControlStructures(Tree* tree, int index) {
         controls[index - 1].push_back(*currentEl);
         buildControlStructures(tree->childNode->siblingNode, deltaNumber + 1);
     }
-    else if (tree->nodeValue == "tau") {
+    else if (tree->nodeValue == "tau")
+    {
         currentEl = new CSElement(tree->nodeValue);
         int tauCnt = 0;
         Tree *runner = tree->childNode;
-        while (runner != NULL) {
+        while (runner != NULL)
+        {
             tauCnt++;
             runner = runner->siblingNode;
         }
         currentEl->index = tauCnt;
         controls[index - 1].push_back(*currentEl);
         Tree *child = tree->childNode;
-        while (child != NULL) {
+        while (child != NULL)
+        {
             buildControlStructures(child, index);
-           child = child->siblingNode;
+            child = child->siblingNode;
         }
     }
-    else {
+    else
+    {
         currentEl = new CSElement(tree->nodeValue);
         currentEl->type = tree->nodeType;
         controls[index - 1].push_back(*currentEl);
         buildControlStructures(tree->childNode, index);
-        if(tree->childNode != NULL)
+        if (tree->childNode != NULL)
             buildControlStructures(tree->childNode->siblingNode, index);
     }
-
 }
 
-
-void CSEMachine:: printControlStructures() {
+void CSEMachine::printControlStructures()
+{
     cout << "Size: " << controls.size() << endl;
 
-    for (int i = 0; i < controls.size(); i++) {
+    for (int i = 0; i < controls.size(); i++)
+    {
         cout << i << ".\t";
-        for (int j = 0; j < controls[i].size(); j++) {
+        for (int j = 0; j < controls[i].size(); j++)
+        {
             if (controls[i].at(j).value == "lambda")
                 cout << "(" + controls[i].at(j).boundVar + ")" + controls[i].at(j).value << controls[i].at(j).index << " ";
-            else if(controls[i].at(j).value == "tau")
+            else if (controls[i].at(j).value == "tau")
                 cout << controls[i].at(j).value << controls[i].at(j).index << " ";
             else
                 cout << controls[i].at(j).value << " ";
@@ -113,33 +120,39 @@ void CSEMachine:: printControlStructures() {
     }
 }
 
-void CSEMachine:: pushDeltaOnStack(int delta) {
-    
+void CSEMachine::pushDeltaOnStack(int delta)
+{
+
     CSElement *freshEnv = new CSElement("env", delta, "", -1);
     freshEnv->isEnvMarker = true;
     leftStack.push(*freshEnv);
     rightStack.push(*freshEnv);
-    for (int i = 0; i < controls[delta].size(); i++) {
-        leftStack.push( controls[delta].at(i) );
+    for (int i = 0; i < controls[delta].size(); i++)
+    {
+        leftStack.push(controls[delta].at(i));
     }
 }
 
-void CSEMachine:: initializeCSEMachine(){
+void CSEMachine::initializeCSEMachine()
+{
     pushDeltaOnStack(0);
     env = new Environment("", new CSElement("none"), GRAMMAR_RULE);
     envCounter = 0;
 }
 
-void CSEMachine:: printCSE() {
+void CSEMachine::printCSE()
+{
     cout << "LEFT:\t";
     stack<CSElement> tempLeft;
-    while (!leftStack.empty()) {
+    while (!leftStack.empty())
+    {
         tempLeft.push(leftStack.top());
         leftStack.pop();
     }
-    while (!tempLeft.empty()) {
+    while (!tempLeft.empty())
+    {
         leftStack.push(tempLeft.top());
-        if(leftStack.top().value == "lambda")
+        if (leftStack.top().value == "lambda")
             cout << leftStack.top().value << leftStack.top().index << " ";
         else if (leftStack.top().value == "env")
             cout << leftStack.top().value << leftStack.top().index << " ";
@@ -147,13 +160,15 @@ void CSEMachine:: printCSE() {
             cout << leftStack.top().value << leftStack.top().index << " ";
         else
             cout << leftStack.top().value << " ";
-        
+
         tempLeft.pop();
     }
 
-    cout << endl << "RIGHT:\t";
+    cout << endl
+         << "RIGHT:\t";
     stack<CSElement> tempRight;
-    while (!rightStack.empty()) {
+    while (!rightStack.empty())
+    {
         tempRight.push(rightStack.top());
         if (rightStack.top().value == "lambda")
             cout << rightStack.top().value << rightStack.top().index << " ";
@@ -163,15 +178,19 @@ void CSEMachine:: printCSE() {
             cout << rightStack.top().value << " ";
         rightStack.pop();
     }
-    while (!tempRight.empty()) {
+    while (!tempRight.empty())
+    {
         rightStack.push(tempRight.top());
         tempRight.pop();
     }
-    cout << endl << endl;
+    cout << endl
+         << endl;
 }
 
-CSElement* CSEMachine:: lookupVar(string name) {
-    for (int i = 0; i < env->variable.size(); i++) {
+CSElement *CSEMachine::lookupVar(string name)
+{
+    for (int i = 0; i < env->variable.size(); i++)
+    {
         if (env->variable[i] == name)
         {
             lookupVal = env->value[i];
@@ -180,8 +199,10 @@ CSElement* CSEMachine:: lookupVar(string name) {
     }
 
     Environment *temp = env->parent;
-    while (temp != NULL) {
-        for (int i = 0; i < env->variable.size(); i++) {
+    while (temp != NULL)
+    {
+        for (int i = 0; i < env->variable.size(); i++)
+        {
             if (env->variable[i] == name)
             {
                 lookupVal = env->value[i];
@@ -193,18 +214,22 @@ CSElement* CSEMachine:: lookupVar(string name) {
     return NULL;
 }
 
-void CSEMachine:: runCSEMachine(){
-    while (!leftStack.empty()) {
+void CSEMachine::runCSEMachine()
+{
+    while (!leftStack.empty())
+    {
         printCSE();
         processCSEMachine();
         leftStack.pop();
     }
 }
 
-void CSEMachine:: processCSEMachine() {
+void CSEMachine::processCSEMachine()
+{
 
     // cout << "op1.value  is "<< rightStack.top().value  <<endl;
-    if (leftStack.top().value == "not") {
+    if (leftStack.top().value == "not")
+    {
         leftStack.pop();
         CSElement node = rightStack.top();
         rightStack.pop();
@@ -212,13 +237,15 @@ void CSEMachine:: processCSEMachine() {
             node.value = "false";
         else if (node.value == "false")
             node.value = "true";
-        else {
+        else
+        {
             cout << "Not needs a boolean!" << endl;
             cin >> lookupType;
             exit(0);
         }
     }
-    else if (leftStack.top().value == "+") {
+    else if (leftStack.top().value == "+")
+    {
         CSElement op1 = rightStack.top();
         rightStack.pop();
         CSElement op2 = rightStack.top();
@@ -227,9 +254,10 @@ void CSEMachine:: processCSEMachine() {
         int in2 = stoi(op2.value);
         op1.value = to_string(in1 + in2);
         rightStack.push(op1);
-        cout <<rightStack.top().value << "leftStack.top().value == +" << endl;
+        cout << rightStack.top().value << "leftStack.top().value == +" << endl;
     }
-    else if (leftStack.top().value == "-") {
+    else if (leftStack.top().value == "-")
+    {
         CSElement op1 = rightStack.top();
         rightStack.pop();
         CSElement op2 = rightStack.top();
@@ -239,7 +267,8 @@ void CSEMachine:: processCSEMachine() {
         op1.value = to_string(in1 - in2);
         rightStack.push(op1);
     }
-    else if (leftStack.top().value == "/") {
+    else if (leftStack.top().value == "/")
+    {
         CSElement op1 = rightStack.top();
         rightStack.pop();
         CSElement op2 = rightStack.top();
@@ -249,7 +278,8 @@ void CSEMachine:: processCSEMachine() {
         op1.value = to_string(in1 / in2);
         rightStack.push(op1);
     }
-    else if (leftStack.top().value == "*") {
+    else if (leftStack.top().value == "*")
+    {
         CSElement op1 = rightStack.top();
         rightStack.pop();
         CSElement op2 = rightStack.top();
@@ -259,7 +289,8 @@ void CSEMachine:: processCSEMachine() {
         op1.value = to_string(in1 * in2);
         rightStack.push(op1);
     }
-    else if (leftStack.top().value == "**") {
+    else if (leftStack.top().value == "**")
+    {
         CSElement op1 = rightStack.top();
         rightStack.pop();
         CSElement op2 = rightStack.top();
@@ -270,10 +301,6 @@ void CSEMachine:: processCSEMachine() {
         op1.value = to_string(x);
         rightStack.push(op1);
     }
-    
 
-
-
-    
     // cout << "op1.value  iF" << rightStack.top().value  <<endl;
 }

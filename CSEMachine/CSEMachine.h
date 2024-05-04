@@ -6,9 +6,9 @@
 #include <stack>
 #include <vector>
 #include <cmath> 
-#include "Tree.h"
+#include "../Tree/Tree.h"
 #include "CSElement.h"
-#include "Environment.h"
+#include "../Environment.h"
 
 using namespace std;
 
