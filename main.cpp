@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
 	Parser Par(&Lex);
 	Par.E();
-	cout << "\n\n Abstract Syntaxt Tree \n\n";
+	// cout << "\n\n Abstract Syntaxt Tree \n\n";
 	Tree::TreePrint(Par.getTopTree());
 	cout << "\n\n STDANDARDIZED TREE\n\n" << endl;
 	Tree::prettyPrint(Standardizer::standardizeTree(Par.getTopTree()));
