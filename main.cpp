@@ -9,6 +9,12 @@
 #include "Lexical_Analyzer/LexicalAnalyzer.cpp"
 #include "Tree/Tree.cpp"
 #include "Parser/Parser.cpp"
+#include "Standardizer.h"
+#include "Standardizer.cpp"
+#include "CSElement.h"
+#include "CSElement.cpp"
+#include "CSEMachine.h"
+#include "CSEMachine.cpp"
 
 using namespace std;
 
@@ -23,6 +29,12 @@ int main(int argc, char *argv[])
 	Par.E();
 	cout << "\n\n Abstract Syntaxt Tree \n\n";
 	Tree::TreePrint(Par.getTopTree());
+	cout << "\n\n STDANDARDIZED TREE\n\n" << endl;
+	Tree::prettyPrint(Standardizer::standardizeTree(Par.getTopTree()));
+	cout << "\n\n CSE Machine structure \n\n" << endl;
+	CSEMachine csemachine(Par.getTopTree());
+	cout << "\n\n" << endl;
+	cout << "Terminated succesfully! Press any key to continue..." << endl;
 
 	return 0;
 }
