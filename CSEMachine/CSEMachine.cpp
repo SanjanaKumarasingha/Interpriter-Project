@@ -3,12 +3,9 @@
 #include <string>
 #include <ctype.h>
 #include <cstdio>
-// #include <stack>
-// #include <vector>
-// #include <cmath>
 #include "../Tree/Tree.cpp"
 #include "CSElement.cpp"
-#include "../Environment.cpp"
+#include "Environment/Environment.cpp"
 #include "CSEMachine.h"
 
 string CSEMachine::getTypeString(int type)
