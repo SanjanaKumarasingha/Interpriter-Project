@@ -7,7 +7,7 @@
 #include "Lexical_Analyzer/LexicalAnalyzer.cpp"
 #include "Tree/Tree.cpp"
 #include "Parser/Parser.cpp"
-#include "Standardizer.cpp"
+#include "Standardizer/Standardizer.cpp"
 #include "CSEMachine/CSEMachine.cpp"
 
 using namespace std;
