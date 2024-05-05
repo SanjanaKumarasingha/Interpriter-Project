@@ -6,6 +6,7 @@
 #include <stack>
 #include <cstdlib>
 #include "../Tree/Tree.h"
+#include "../Lexical_Analyzer/LexicalAnalyzer.h"
 using namespace std;
 
 #ifndef PARSER_H
@@ -13,7 +14,6 @@ using namespace std;
 
 class Parser
 {
-
 	enum NodeType
 	{
 		STRING_VALUE,

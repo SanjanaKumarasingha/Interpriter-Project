@@ -64,7 +64,7 @@ void Parser::Read(string mToken)
 {
 	if (tokenType == STOP)
 	{
-		cout << "EXCEPTION!!!	Input terminated unexpectedly" << endl;
+		cout << "Input terminated unexpectedly" << endl;
 		cin >> mToken;
 		exit(0);
 	}

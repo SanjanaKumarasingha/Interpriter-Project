@@ -13,7 +13,6 @@ using namespace std;
 
 class Tree
 {
-
     enum NodeType
     {
         STRING_VALUE,
